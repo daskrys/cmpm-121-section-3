@@ -3,12 +3,18 @@ import * as Phaser from "phaser";
 import starfieldUrl from "/assets/starfield.png";
 
 export default class Play extends Phaser.Scene {
+
   fire?: Phaser.Input.Keyboard.Key;
   left?: Phaser.Input.Keyboard.Key;
   right?: Phaser.Input.Keyboard.Key;
+  w?: Phaser.Input.Keyboard.Key;
+  a?: Phaser.Input.Keyboard.Key;
+  s?: Phaser.Input.Keyboard.Key;
+  d?: Phaser.Input.Keyboard.Key;
 
   starfield?: Phaser.GameObjects.TileSprite;
-  spinner?: Phaser.GameObjects.Shape;
+  spinner?: Phaser.GameObjects.Sprite;
+  //spinner?: Phaser.GameObjects.Shape;
 
   rotationSpeed = Phaser.Math.PI2 / 1000; // radians per millisecond
 
@@ -18,6 +24,7 @@ export default class Play extends Phaser.Scene {
 
   preload() {
     this.load.image("starfield", starfieldUrl);
+    this.load.image("dog", '/yoink.png')
   }
 
   #addKey(
@@ -30,6 +37,10 @@ export default class Play extends Phaser.Scene {
     this.fire = this.#addKey("F");
     this.left = this.#addKey("LEFT");
     this.right = this.#addKey("RIGHT");
+    this.w = this.#addKey("W");
+    this.s = this.#addKey("S");
+    this.a = this.#addKey("A");
+    this.d = this.#addKey("D");
 
     this.starfield = this.add
       .tileSprite(
@@ -41,7 +52,8 @@ export default class Play extends Phaser.Scene {
       )
       .setOrigin(0, 0);
 
-    this.spinner = this.add.rectangle(100, 100, 50, 50, 0xff0000);
+      this.spinner = this.add.sprite(50, 50, "dog").setScale(0.15);
+    //this.spinner = this.add.rectangle(100, 100, 50, 50, 0x5548d2);
   }
 
   update(_timeMs: number, delta: number) {
@@ -53,6 +65,23 @@ export default class Play extends Phaser.Scene {
     if (this.right!.isDown) {
       this.spinner!.rotation += delta * this.rotationSpeed;
     }
+
+    if(this.w!.isDown) {
+      this.spinner!.y -= 5;
+    }
+
+    if(this.a!.isDown) {
+      this.spinner!.x -= 5;
+    }
+
+    if(this.s!.isDown) {
+      this.spinner!.y += 5;
+    }
+
+    if(this.d!.isDown) {
+      this.spinner!.x += 5;
+    }
+    
 
     if (this.fire!.isDown) {
       this.tweens.add({
